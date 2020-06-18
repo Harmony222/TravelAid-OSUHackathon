@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>TravelAid</h1>
+    {% for country in r_data %}
+        <h3>{{ country.adm0_name }}</h3>
+        {% if country.info %}
+            <p>{{ country.info }}</p>
+        {% else %}
+            <p>No information available.</p>
+        {% endif %}
+    {% endfor %}
+{% endblock content %}
