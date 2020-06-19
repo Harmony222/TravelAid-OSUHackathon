@@ -56,6 +56,7 @@ def home():
     else:
         return render_template('home.html')
 
+
 try:
     flights = amadeus.shopping.flight_offers_search.get(
         originLocationCode='SEA', 
@@ -64,11 +65,15 @@ try:
         adults=1,
         currencyCode="USD")
     cheapest_flight = flights.data[0]
+
     print(cheapest_flight)
+
     # un-comment the code below to write the data to a json file for easier viewing!
     # with open ('flight.json', 'w') as outfile:
     #     json.dump(cheapest_flight, outfile)
 except ResponseError as error:
     raise error
+
+    
 if __name__ == '__main__':
     app.run(debug=True)
