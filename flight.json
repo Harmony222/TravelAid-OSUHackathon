@@ -1,0 +1,85 @@
+{
+    "type": "flight-offer",
+    "id": "1",
+    "source": "GDS",
+    "instantTicketingRequired": false,
+    "nonHomogeneous": false,
+    "oneWay": false,
+    "lastTicketingDate": "2020-06-20",
+    "numberOfBookableSeats": 7,
+    "itineraries": [
+        {
+            "duration": "PT50M",
+            "segments": [
+                {
+                    "departure": {
+                        "iataCode": "PAE",
+                        "at": "2020-07-01T06:00:00"
+                    },
+                    "arrival": {
+                        "iataCode": "PDX",
+                        "at": "2020-07-01T06:50:00"
+                    },
+                    "carrierCode": "AS",
+                    "number": "2060",
+                    "aircraft": {
+                        "code": "E75"
+                    },
+                    "duration": "PT50M",
+                    "id": "54",
+                    "numberOfStops": 0,
+                    "blacklistedInEU": false
+                }
+            ]
+        }
+    ],
+    "price": {
+        "currency": "USD",
+        "total": "128.60",
+        "base": "123.00",
+        "fees": [
+            {
+                "amount": "0.00",
+                "type": "SUPPLIER"
+            },
+            {
+                "amount": "0.00",
+                "type": "TICKETING"
+            }
+        ],
+        "grandTotal": "128.60"
+    },
+    "pricingOptions": {
+        "fareType": [
+            "PUBLISHED"
+        ],
+        "includedCheckedBagsOnly": false
+    },
+    "validatingAirlineCodes": [
+        "AS"
+    ],
+    "travelerPricings": [
+        {
+            "travelerId": "1",
+            "fareOption": "STANDARD",
+            "travelerType": "ADULT",
+            "price": {
+                "currency": "USD",
+                "total": "128.60",
+                "base": "123.00"
+            },
+            "fareDetailsBySegment": [
+                {
+                    "segmentId": "54",
+                    "cabin": "ECONOMY",
+                    "fareBasis": "VH7OAVBN",
+                    "brandedFare": "SV",
+                    "class": "X",
+                    "includedCheckedBags": {
+                        "quantity": 0
+                    }
+                }
+            ]
+        }
+    ]
+}
