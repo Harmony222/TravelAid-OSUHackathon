@@ -1,6 +1,9 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 from apscheduler.schedulers.background import BackgroundScheduler
+from amadeus import Client, ResponseError
+# from amadeusapi import *
 import csv, json, requests
+
 
 with open('static/restrictions_data.json', 'r') as infile:
     r_data = json.load(infile)
@@ -31,10 +34,41 @@ scheduler.start()
 
 app = Flask(__name__)
 
-@app.route('/')
-@app.route('/home')
-def home():
-    return render_template('home.html', r_data=r_data)
+# https://github.com/amadeus4dev/amadeus-python
+amadeus = Client(
+    client_id='key',
+    client_secret='secret'
+)
 
+@app.route('/')
+@app.route('/home', methods=['POST', 'GET'])
+def home():
+    if request.method == 'POST':
+        country_name = request.form['country']
+        counter = 0
+        try:
+            for country in r_data:
+                if country_name == country["adm0_name"]:
+                    return render_template('home.html', r_data=r_data[counter])
+                counter += 1
+        except:
+            return 'There was an issue finding that country info'
+    else:
+        return render_template('home.html')
+
+try:
+    flights = amadeus.shopping.flight_offers_search.get(
+        originLocationCode='SEA', 
+        destinationLocationCode='PDX',
+        departureDate='2020-07-01', 
+        adults=1,
+        currencyCode="USD")
+    cheapest_flight = flights.data[0]
+    print(cheapest_flight)
+    # un-comment the code below to write the data to a json file for easier viewing!
+    # with open ('flight.json', 'w') as outfile:
+    #     json.dump(cheapest_flight, outfile)
+except ResponseError as error:
+    raise error
 if __name__ == '__main__':
     app.run(debug=True)
