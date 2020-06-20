@@ -36,8 +36,8 @@ app = Flask(__name__)
 
 # https://github.com/amadeus4dev/amadeus-python
 amadeus = Client(
-    client_id='u5zmdzdBHAKZt13AbvSmfsDFO6kfC68A',
-    client_secret='PkfVAE5FMJc2G9Gv'
+    client_id='id',
+    client_secret='secret'
 )
 
 @app.route('/')
