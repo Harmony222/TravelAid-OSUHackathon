@@ -1,12 +1,67 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>TravelAid</h1>
-    {% for country in r_data %}
-        <h3>{{ country.adm0_name }}</h3>
-        {% if country.info %}
-            <p>{{ country.info }}</p>
-        {% else %}
-            <p>No information available.</p>
+
+    <form action="/home" method="POST">
+        <label>Select list</label>
+            <!-- <input type="text" name="country" id="country"> -->
+             <select name = "country">
+                {% for country in country_list %}
+                <option value = "{{ country }}">{{ country}}</option>
+                {% endfor %}
+             </select>
+             <input type="submit" value="Submit">
+             
+    </form>
+    <br>
+    <div style="overflow: auto; width: auto; height:250px;">
+        {% if data_obj %}
+            <h3>{{ data_obj.adm0_name }}</h3>
+            {% if data_obj.info %}
+                <p>{{ data_obj.info }}</p>
+            {% else %}
+                <p>No information available.</p>
+            {% endif %}
         {% endif %}
-    {% endfor %}
+    </div>
+    <br>
+
+    <table id="dtDynamicVerticalScrollExample" class="table table-striped table-bordered table-sm" cellspacing="0"
+  width="100%">
+  <thead>
+    <tr>
+      <th class="th-sm">Airline
+      </th>
+      <th class="th-sm">Number of Stops
+      </th>
+      <th class="th-sm">Price
+      </th>
+      <th class="th-sm">Duration
+      </th>
+      <th class="th-sm">Class
+      </th>
+    </tr>
+  </thead>
+
+    <!-- <tbody>
+    <tr>
+    </tr>
+  </tbody> -->
+
+  <tfoot>
+    <tr>
+      <th class="th-sm">Airline
+      </th>
+      <th class="th-sm">Number of Stops
+      </th>
+      <th class="th-sm">Price
+      </th>
+      <th class="th-sm">Duration
+      </th>
+      <th class="th-sm">Class
+      </th>
+    </tr>
+  </tfoot>
+</table>
+
 {% endblock content %}
