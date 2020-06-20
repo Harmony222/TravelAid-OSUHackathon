@@ -5,28 +5,56 @@
     "instantTicketingRequired": false,
     "nonHomogeneous": false,
     "oneWay": false,
-    "lastTicketingDate": "2020-06-20",
-    "numberOfBookableSeats": 7,
+    "lastTicketingDate": "2020-06-21",
+    "numberOfBookableSeats": 9,
     "itineraries": [
         {
-            "duration": "PT50M",
+            "duration": "PT11H50M",
             "segments": [
                 {
                     "departure": {
-                        "iataCode": "PAE",
-                        "at": "2020-07-01T06:00:00"
+                        "iataCode": "SEA",
+                        "at": "2020-07-01T19:15:00"
                     },
                     "arrival": {
-                        "iataCode": "PDX",
-                        "at": "2020-07-01T06:50:00"
+                        "iataCode": "DUB",
+                        "terminal": "2",
+                        "at": "2020-07-02T12:35:00"
                     },
-                    "carrierCode": "AS",
-                    "number": "2060",
+                    "carrierCode": "EI",
+                    "number": "52",
                     "aircraft": {
-                        "code": "E75"
+                        "code": "332"
                     },
-                    "duration": "PT50M",
-                    "id": "54",
+                    "operating": {
+                        "carrierCode": "EI"
+                    },
+                    "duration": "PT9H20M",
+                    "id": "186",
+                    "numberOfStops": 0,
+                    "blacklistedInEU": false
+                },
+                {
+                    "departure": {
+                        "iataCode": "DUB",
+                        "terminal": "2",
+                        "at": "2020-07-02T13:35:00"
+                    },
+                    "arrival": {
+                        "iataCode": "LHR",
+                        "terminal": "2",
+                        "at": "2020-07-02T15:05:00"
+                    },
+                    "carrierCode": "EI",
+                    "number": "166",
+                    "aircraft": {
+                        "code": "320"
+                    },
+                    "operating": {
+                        "carrierCode": "EI"
+                    },
+                    "duration": "PT1H30M",
+                    "id": "187",
                     "numberOfStops": 0,
                     "blacklistedInEU": false
                 }
@@ -35,8 +63,8 @@
     ],
     "price": {
         "currency": "USD",
-        "total": "128.60",
-        "base": "123.00",
+        "total": "797.50",
+        "base": "747.00",
         "fees": [
             {
                 "amount": "0.00",
@@ -47,16 +75,16 @@
                 "type": "TICKETING"
             }
         ],
-        "grandTotal": "128.60"
+        "grandTotal": "797.50"
     },
     "pricingOptions": {
         "fareType": [
             "PUBLISHED"
         ],
-        "includedCheckedBagsOnly": false
+        "includedCheckedBagsOnly": true
     },
     "validatingAirlineCodes": [
-        "AS"
+        "EI"
     ],
     "travelerPricings": [
         {
@@ -65,18 +93,26 @@
             "travelerType": "ADULT",
             "price": {
                 "currency": "USD",
-                "total": "128.60",
-                "base": "123.00"
+                "total": "797.50",
+                "base": "747.00"
             },
             "fareDetailsBySegment": [
                 {
-                    "segmentId": "54",
+                    "segmentId": "186",
                     "cabin": "ECONOMY",
-                    "fareBasis": "VH7OAVBN",
-                    "brandedFare": "SV",
-                    "class": "X",
+                    "fareBasis": "ZJOW20US",
+                    "class": "Z",
                     "includedCheckedBags": {
-                        "quantity": 0
+                        "quantity": 1
+                    }
+                },
+                {
+                    "segmentId": "187",
+                    "cabin": "ECONOMY",
+                    "fareBasis": "AOW26GDS",
+                    "class": "A",
+                    "includedCheckedBags": {
+                        "quantity": 1
                     }
                 }
             ]

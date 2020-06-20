@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request
 from apscheduler.schedulers.background import BackgroundScheduler
 from amadeus import Client, ResponseError
-# from amadeusapi import *
+from amadeusapi import *
 import csv, json, requests
 
 
@@ -35,10 +35,10 @@ scheduler.start()
 app = Flask(__name__)
 
 # https://github.com/amadeus4dev/amadeus-python
-amadeus = Client(
-    client_id='id',
-    client_secret='secret'
-)
+# amadeus = Client(
+#     client_id='id',
+#     client_secret='secret'
+# )
 
 @app.route('/')
 @app.route('/home', methods=['POST', 'GET'])
@@ -66,23 +66,47 @@ def home():
     else:
         return render_template('home.html', country_list=country_list)
 
+@app.route('/testing', methods=['POST', 'GET'])
+def testing():
+    seat_classes = {
+        'economy' : ['K', 'L', 'Q', 'V', 'W', 'U', 'T', 'X', 'N', 'O', 'S', 'Y', 'B', 'M', 'H', 'W', 'E'],
+        'business' : ['D', 'I', 'Z', 'J', 'C', 'D'],
+        'first' : ['A', 'F']
+    }
 
-try:
-    flights = amadeus.shopping.flight_offers_search.get(
-        originLocationCode='SEA', 
-        destinationLocationCode='PDX',
-        departureDate='2020-07-01', 
-        adults=1,
-        currencyCode="USD")
-    cheapest_flight = flights.data[0]
 
-    #print(cheapest_flight)
+    try:
+        flights = amadeus.shopping.flight_offers_search.get(
+            originLocationCode='SEA', 
+            destinationLocationCode='LHR',
+            departureDate='2020-07-01', 
+            adults=1,
+            currencyCode="USD")
+        cheapest_flight = flights.data[0]
 
-    # un-comment the code below to write the data to a json file for easier viewing!
-    # with open ('flight.json', 'w') as outfile:
-    #     json.dump(cheapest_flight, outfile)
-except ResponseError as error:
-    raise error
+        airline_code = cheapest_flight['itineraries'][0]['segments'][0]['operating']['carrierCode']
+        airline = amadeus.reference_data.airlines.get(airlineCodes=airline_code).data[0]['businessName']
+        class_code = cheapest_flight['travelerPricings'][0]['fareDetailsBySegment'][0]['class'] 
+
+        for cl in seat_classes:
+            for code in seat_classes[cl]:
+                if class_code == code:
+                    class_name = cl
+
+        flight_data = {
+            'airline' : airline,
+            'num_stops' : cheapest_flight['itineraries'][0]['segments'][0]['numberOfStops'],
+            'price' : cheapest_flight['price']['total'],
+            'duration' : cheapest_flight['itineraries'][0]['segments'][0]['duration'],
+            'seat_class' : class_name
+        }
+        return render_template('testing.html', flight_data=flight_data) 
+        # print(flight_data)
+        #cheapest_flight['validatingAirlineCodes'i un-comment the code below to write the data to a json file for easier viewing!
+        # with open ('flight.json', 'w') as outfile:
+        #     json.dump(cheapest_flight, outfile)
+    except ResponseError as error:
+        raise error
 
     
 if __name__ == '__main__':
