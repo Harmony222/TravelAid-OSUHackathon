@@ -62,13 +62,12 @@ def home():
                 if country_name == country["adm0_name"]:
                     data_obj = r_data[counter]
                 counter += 1
-
+            print('testing try block')
             all_airport_codes, country_airport_codes = get_airport_codes(country_name)
-            if len(country_airport_codes) == 0:
-                no_airport_found = "No airport information found for that country."
+            # if len(country_airport_codes) == 0:
+            #     no_airport_found = "No airport information found for that country."
             return render_template('home.html', data_obj=data_obj, country_list=country_list, 
-                                    all_airport_codes=all_airport_codes, country_airport_codes=country_airport_codes,
-                                    no_airport_found=no_airport_found)
+                                    all_airport_codes=all_airport_codes, country_airport_codes=country_airport_codes)
         except:
             return 'There was an issue finding that country info'
     else:
