@@ -8,6 +8,7 @@ import csv, json, requests
 with open('static/restrictions_data.json', 'r') as infile:
     r_data = json.load(infile)
 
+
 # travel restriction by country data is updated daily from this website: https://data.humdata.org/dataset/covid-19-global-travel-restrictions-and-airline-information
 # pip3 install apscheduler to call updateJSON function everyday
 # pip3 install requests to get csv file
@@ -49,7 +50,8 @@ def home():
         for country in r_data:
                 country_list.append(country["adm0_name"])
                 counter += 1
-        print(country_list)
+        country_list.sort()
+        # print(country_list)
     if request.method == 'POST':
         country_name = request.form['country']
         # country_name = request.form.get('country1')
@@ -60,11 +62,18 @@ def home():
                 if country_name == country["adm0_name"]:
                     data_obj = r_data[counter]
                 counter += 1
-            return render_template('home.html', data_obj=data_obj, country_list=country_list)
+
+            all_airport_codes, country_airport_codes = get_airport_codes(country_name)
+            if len(country_airport_codes) == 0:
+                no_airport_found = "No airport information found for that country."
+            return render_template('home.html', data_obj=data_obj, country_list=country_list, 
+                                    all_airport_codes=all_airport_codes, country_airport_codes=country_airport_codes,
+                                    no_airport_found=no_airport_found)
         except:
             return 'There was an issue finding that country info'
     else:
         return render_template('home.html', country_list=country_list)
+
 
 @app.route('/testing', methods=['POST', 'GET'])
 def testing():
@@ -73,7 +82,6 @@ def testing():
         'business' : ['D', 'I', 'Z', 'J', 'C', 'D'],
         'first' : ['A', 'F']
     }
-
 
     try:
         flights = amadeus.shopping.flight_offers_search.get(
@@ -108,6 +116,19 @@ def testing():
     except ResponseError as error:
         raise error
 
-    
+def get_airport_codes(country):
+    with open('static/airports.json', 'r') as infile:
+        airport_data = json.load(infile)
+    all_airports = []
+    airports = []
+    for airport in airport_data:
+        all_airports.append(airport['code'])
+        if country == airport['country']:
+            airports.append(airport['code'])
+    all_airports.sort()
+    airports.sort()
+    return all_airports, airports
+
+
 if __name__ == '__main__':
     app.run(debug=True)
