@@ -36,19 +36,13 @@ app = Flask(__name__)
 
 # https://github.com/amadeus4dev/amadeus-python
 amadeus = Client(
-<<<<<<< HEAD
     client_id='u5zmdzdBHAKZt13AbvSmfsDFO6kfC68A',
     client_secret='PkfVAE5FMJc2G9Gv'
-=======
-    client_id='key',
-    client_secret='secret'
->>>>>>> e4173a06acd156a0d67639ff061e968741f9f386
 )
 
 @app.route('/')
 @app.route('/home', methods=['POST', 'GET'])
 def home():
-<<<<<<< HEAD
     if request.method == 'POST' or request.method == 'GET':
         country_list = []
         counter = 0
@@ -60,15 +54,10 @@ def home():
         country_name = request.form['country']
         # country_name = request.form.get('country1')
         print(country_name)
-=======
-    if request.method == 'POST':
-        country_name = request.form['country']
->>>>>>> e4173a06acd156a0d67639ff061e968741f9f386
         counter = 0
         try:
             for country in r_data:
                 if country_name == country["adm0_name"]:
-<<<<<<< HEAD
                     data_obj = r_data[counter]
                 counter += 1
             return render_template('home.html', data_obj=data_obj, country_list=country_list)
@@ -76,14 +65,6 @@ def home():
             return 'There was an issue finding that country info'
     else:
         return render_template('home.html', country_list=country_list)
-=======
-                    return render_template('home.html', r_data=r_data[counter])
-                counter += 1
-        except:
-            return 'There was an issue finding that country info'
-    else:
-        return render_template('home.html')
->>>>>>> e4173a06acd156a0d67639ff061e968741f9f386
 
 
 try:
@@ -95,11 +76,7 @@ try:
         currencyCode="USD")
     cheapest_flight = flights.data[0]
 
-<<<<<<< HEAD
     #print(cheapest_flight)
-=======
-    print(cheapest_flight)
->>>>>>> e4173a06acd156a0d67639ff061e968741f9f386
 
     # un-comment the code below to write the data to a json file for easier viewing!
     # with open ('flight.json', 'w') as outfile:
