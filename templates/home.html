@@ -6,6 +6,7 @@
         <label>Select a country</label>
             <!-- <input type="text" name="country" id="country"> -->
              <select name = "country" class="chosen-select" >
+               <option value = "select">Select</option>
                 {% for country in country_list %}
                 <option value = "{{ country }}">{{ country}}</option>
                 {% endfor %}
