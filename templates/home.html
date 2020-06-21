@@ -1,89 +1,104 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>TravelAid</h1>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-8">
+                <h1 class="display-4">TravelAid</h1>
+                <p class="lead">TravelAid is a web app where you can find all the travel information/restrictions for each country in one place as well as flight options and pricing from your location to the country of your choice.</p>
+            
+                <form action="/home" method="POST">
+                    <label>Select a country</label>
+                        <!-- <input type="text" name="country" id="country"> -->
+                         <select name = "country" class="chosen-select" >
+                           <option value = "select">Select</option>
+                            {% for country in country_list %}
+                            <option value = "{{ country }}">{{ country}}</option>
+                            {% endfor %}
+                         </select>
+                         <input type="submit" name="submit_button" value="country_submit" >
+                </form>
+            
+                <br>
+                <div style="overflow: auto; width: auto; height:250px;">
+                    {% if data_obj %}
+                        <h3>{{ data_obj.adm0_name }}</h3>
+                        {% if data_obj.info %}
+                            <p id="country_info">{{ data_obj.info }}</p>
+                            
+                        {% else %}
+                            <p>No information available.</p>
+                        {% endif %}
+                    {% endif %}
+                    <div id="output"></div>
+                </div>
 
-    <form action="/home" method="POST">
-        <label>Select a country</label>
-            <!-- <input type="text" name="country" id="country"> -->
-             <select name = "country" class="chosen-select" >
-               <option value = "select">Select</option>
-                {% for country in country_list %}
-                <option value = "{{ country }}">{{ country}}</option>
-                {% endfor %}
-             </select>
-             <input type="submit" name="submit_button" value="country_submit" >
-    </form>
+            </div>
+            <div class="col-4">
+                <p> <img src="/static/cartoon-globe.png" alt="cartoon-globe"></p>
+            </div>
+            
+            <br>
 
-    <br>
-    <div style="overflow: auto; width: auto; height:250px;">
-        {% if data_obj %}
-            <h3>{{ data_obj.adm0_name }}</h3>
-            {% if data_obj.info %}
-                <p id="country_info">{{ data_obj.info }}</p>
+            <div>
+                {% if country_airport_codes %}
+                    <form action="/home" method="POST">
+                        <label>Select Origination Airport</label>
+                            <select name = "origination" class="chosen-airport" >
+                              {% for airport in all_airport_codes %}
+                              <option value = "{{ airport }}">{{ airport }}</option>
+                              {% endfor %}
+                            </select>       
+                        <label>Select Destination Airport for <strong>{{ data_obj.adm0_name }} </strong> </label>
+                             <select name = "destination" class="chosen-airport" >
+                                {% for airport in country_airport_codes %}
+                                <option value = "{{ airport }}">{{ airport }}</option>
+                                {% endfor %}
+                             </select>
+                        <label>Enter Departure Date</label>
+                             <input type="date" name="departure">
+                        <input type="submit" name="submit_button" value="code_submit">
+                    </form>
+                {% endif %}  
+                {% if no_airport_found %}
+                    <p>{{ no_airport_found }}</p>
+                {% endif %}
+                </div>
                 
-            {% else %}
-                <p>No information available.</p>
-            {% endif %}
-        {% endif %}
-        <div id="output"></div>
+                <br>
+
+                <div>
+                  <table id="dtDynamicVerticalScrollExample" class="table table-striped table-bordered table-sm" cellspacing="0"
+                  width="100%">
+                    <thead>
+                      <tr>
+                        <th class="th-sm">Airline
+                        </th>
+                        <th class="th-sm">Number of Stops
+                        </th>
+                        <th class="th-sm">Price
+                        </th>
+                        <th class="th-sm">Duration
+                        </th>
+                        <!-- <th class="th-sm">Class
+                        </th> -->
+                      </tr>
+                    </thead>
+                
+                    <tbody>
+                      <tr>
+                      {% if flight_data %}
+                          <td>{{ flight_data.airline }}</td>
+                          <td>{{ flight_data.num_stops }}</td>
+                          <td>{{ flight_data.price }} </td>
+                          <td>{{ flight_data.duration }}</td>
+                          <!-- <td>{{ flight_data.seat_class }}</td> -->
+                      {% endif %}            
+                      </tr>
+                  </tbody>
+                </table>
+                
+                </div>
+        
+        </div>
     </div>
-    <br>
-<div>
-{% if country_airport_codes %}
-    <form action="/home" method="POST">
-        <label>Select Origination Airport</label>
-            <select name = "origination" class="chosen-airport" >
-              {% for airport in all_airport_codes %}
-              <option value = "{{ airport }}">{{ airport }}</option>
-              {% endfor %}
-            </select>       
-        <label>Select Destination Airport for <strong>{{ data_obj.adm0_name }} </strong> </label>
-             <select name = "destination" class="chosen-airport" >
-                {% for airport in country_airport_codes %}
-                <option value = "{{ airport }}">{{ airport }}</option>
-                {% endfor %}
-             </select>
-        <label>Enter Departure Date</label>
-             <input type="date" name="departure">
-        <input type="submit" name="submit_button" value="code_submit">
-    </form>
-{% endif %}  
-{% if no_airport_found %}
-    <p>{{ no_airport_found }}</p>
-{% endif %}
-</div>
-
-<div>
-  <table id="dtDynamicVerticalScrollExample" class="table table-striped table-bordered table-sm" cellspacing="0"
-  width="100%">
-    <thead>
-      <tr>
-        <th class="th-sm">Airline
-        </th>
-        <th class="th-sm">Number of Stops
-        </th>
-        <th class="th-sm">Price
-        </th>
-        <th class="th-sm">Duration
-        </th>
-        <!-- <th class="th-sm">Class
-        </th> -->
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-      {% if flight_data %}
-          <td>{{ flight_data.airline }}</td>
-          <td>{{ flight_data.num_stops }}</td>
-          <td>{{ flight_data.price }} </td>
-          <td>{{ flight_data.duration }}</td>
-          <!-- <td>{{ flight_data.seat_class }}</td> -->
-      {% endif %}            
-      </tr>
-  </tbody>
-</table>
-
-</div>
-
 {% endblock content %}
