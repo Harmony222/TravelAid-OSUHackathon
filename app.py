@@ -78,6 +78,11 @@ def home():
             destination = request.form['destination']
             origination = request.form['origination']
             departureDate = request.form['departure']
+            request_data = {
+                'destination': destination,
+                'origination': origination,
+                'departureDate' : departureDate
+            }
             counter = 0
             data_obj = None
             for country in r_data:
@@ -97,7 +102,7 @@ def home():
                                                 data_obj=data_obj, country_list=country_list,
                                                 all_airport_codes=all_airport_codes, 
                                                 country_airport_codes=country_airport_codes,
-                                                flight_data=flight_data)
+                                                flight_data=flight_data, request_data=request_data)
     else:
         return render_template('home.html', country_submit=False, flight_submit=False, 
                                             country_list=country_list)

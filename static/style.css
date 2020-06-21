@@ -1,9 +1,10 @@
 #airportForm {
-    margin-top: 30px;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 
 .country {
-    color: #6691ac;
+    color: #48758e;
 }
 
 .btn-light {
@@ -24,5 +25,10 @@ html, body {
 .fill {
     min-height: 100%;
     height: 100%;
+
+}
+
+.jumbotron {
+    padding-top: 2rem;
 
 }
