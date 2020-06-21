@@ -32,3 +32,10 @@ html, body {
     padding-top: 2rem;
 
 }
+
+#departure_date {
+    display: inline-block;
+    width: 25%;
+    min-width: 160px;
+    padding: .3rem .45rem;
+}

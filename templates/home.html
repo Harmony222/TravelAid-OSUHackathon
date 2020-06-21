@@ -5,7 +5,7 @@
             <div class="col-8">
                 <h1 class="display-4">TravelAid</h1>
                 <p class="lead">TravelAid is a web app where you can find all the travel information/restrictions for each country in one place as well as flight options and pricing from your location to the country of your choice.</p>
-            
+
                 <form action="/home" method="POST">
                     <label>Select a country</label>
                          <select name = "country" class="chosen-select" >
@@ -16,6 +16,8 @@
                          </select>
                          <input class="btn btn-light" type="submit" name="submit_button" value="Get Country Restrictions" >
                 </form>
+
+
             
                 <br>
                     {% if data_obj %}                
@@ -33,11 +35,11 @@
                             <p id="country_optional">{{ optional | safe }}</p>
                         {% endif %}
 
-
                 </div>
                     {% endif %}
                     <div id="output"></div>                    
             </div>
+
             <div class="col-4">
                 <p> <img src="/static/cartoon-globe.png" alt="cartoon-globe"></p>
             </div>
@@ -65,7 +67,7 @@
                                 </select>
                                 <label>Select Destination Airport for <strong class="country">{{ data_obj.adm0_name }} </strong> </label>
                         </div>
-                             <input type="date" name="departure">
+                             <input class="form-control" id="departure_date" type="date" name="departure">
                              <label>Enter Departure Date</label>
                         <input class="btn btn-light" type="submit" name="submit_button" value="Get Flights">
                     </form>
