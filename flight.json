@@ -5,56 +5,79 @@
     "instantTicketingRequired": false,
     "nonHomogeneous": false,
     "oneWay": false,
-    "lastTicketingDate": "2020-06-21",
-    "numberOfBookableSeats": 9,
+    "lastTicketingDate": "2020-07-09",
+    "numberOfBookableSeats": 7,
     "itineraries": [
         {
-            "duration": "PT11H50M",
+            "duration": "PT27H15M",
             "segments": [
                 {
                     "departure": {
                         "iataCode": "SEA",
-                        "at": "2020-07-01T19:15:00"
+                        "at": "2020-07-09T19:00:00"
                     },
                     "arrival": {
-                        "iataCode": "DUB",
-                        "terminal": "2",
-                        "at": "2020-07-02T12:35:00"
+                        "iataCode": "LAX",
+                        "terminal": "6",
+                        "at": "2020-07-09T21:45:00"
                     },
-                    "carrierCode": "EI",
-                    "number": "52",
+                    "carrierCode": "AS",
+                    "number": "1196",
                     "aircraft": {
-                        "code": "332"
+                        "code": "32S"
                     },
                     "operating": {
-                        "carrierCode": "EI"
+                        "carrierCode": "AS"
                     },
-                    "duration": "PT9H20M",
-                    "id": "186",
+                    "duration": "PT2H45M",
+                    "id": "46",
                     "numberOfStops": 0,
                     "blacklistedInEU": false
                 },
                 {
                     "departure": {
-                        "iataCode": "DUB",
-                        "terminal": "2",
-                        "at": "2020-07-02T13:35:00"
+                        "iataCode": "LAX",
+                        "terminal": "B",
+                        "at": "2020-07-10T00:20:00"
                     },
                     "arrival": {
-                        "iataCode": "LHR",
-                        "terminal": "2",
-                        "at": "2020-07-02T15:05:00"
+                        "iataCode": "XIY",
+                        "terminal": "3",
+                        "at": "2020-07-11T05:10:00"
                     },
-                    "carrierCode": "EI",
-                    "number": "166",
+                    "carrierCode": "HU",
+                    "number": "494",
                     "aircraft": {
-                        "code": "320"
+                        "code": "789"
                     },
                     "operating": {
-                        "carrierCode": "EI"
+                        "carrierCode": "HU"
                     },
-                    "duration": "PT1H30M",
-                    "id": "187",
+                    "duration": "PT13H50M",
+                    "id": "47",
+                    "numberOfStops": 0,
+                    "blacklistedInEU": false
+                },
+                {
+                    "departure": {
+                        "iataCode": "XIY",
+                        "terminal": "3",
+                        "at": "2020-07-11T09:25:00"
+                    },
+                    "arrival": {
+                        "iataCode": "AAT",
+                        "at": "2020-07-11T13:15:00"
+                    },
+                    "carrierCode": "3U",
+                    "number": "8493",
+                    "aircraft": {
+                        "code": "319"
+                    },
+                    "operating": {
+                        "carrierCode": "3U"
+                    },
+                    "duration": "PT3H50M",
+                    "id": "48",
                     "numberOfStops": 0,
                     "blacklistedInEU": false
                 }
@@ -63,8 +86,8 @@
     ],
     "price": {
         "currency": "USD",
-        "total": "797.50",
-        "base": "747.00",
+        "total": "1487.64",
+        "base": "1362.00",
         "fees": [
             {
                 "amount": "0.00",
@@ -75,7 +98,7 @@
                 "type": "TICKETING"
             }
         ],
-        "grandTotal": "797.50"
+        "grandTotal": "1487.64"
     },
     "pricingOptions": {
         "fareType": [
@@ -84,7 +107,7 @@
         "includedCheckedBagsOnly": true
     },
     "validatingAirlineCodes": [
-        "EI"
+        "HR"
     ],
     "travelerPricings": [
         {
@@ -93,26 +116,35 @@
             "travelerType": "ADULT",
             "price": {
                 "currency": "USD",
-                "total": "797.50",
-                "base": "747.00"
+                "total": "1487.64",
+                "base": "1362.00"
             },
             "fareDetailsBySegment": [
                 {
-                    "segmentId": "186",
+                    "segmentId": "46",
                     "cabin": "ECONOMY",
-                    "fareBasis": "ZJOW20US",
-                    "class": "Z",
+                    "fareBasis": "MKOWKUS",
+                    "class": "R",
                     "includedCheckedBags": {
-                        "quantity": 1
+                        "quantity": 2
                     }
                 },
                 {
-                    "segmentId": "187",
+                    "segmentId": "47",
                     "cabin": "ECONOMY",
-                    "fareBasis": "AOW26GDS",
-                    "class": "A",
+                    "fareBasis": "MKOWKUS",
+                    "class": "M",
                     "includedCheckedBags": {
-                        "quantity": 1
+                        "quantity": 2
+                    }
+                },
+                {
+                    "segmentId": "48",
+                    "cabin": "ECONOMY",
+                    "fareBasis": "Y",
+                    "class": "Y",
+                    "includedCheckedBags": {
+                        "quantity": 2
                     }
                 }
             ]

@@ -105,12 +105,6 @@ def home():
     
 
 def flights(destination, origination, departureDate):
-    seat_classes = {
-        'economy' : ['K', 'L', 'Q', 'V', 'W', 'U', 'T', 'X', 'N', 'O', 'S', 'Y', 'B', 'M', 'H', 'W', 'E'],
-        'business' : ['D', 'I', 'Z', 'J', 'C', 'D'],
-        'first' : ['A', 'F']
-    }
-
     try:
         flights = amadeus.shopping.flight_offers_search.get(
             originLocationCode=origination, 
@@ -122,26 +116,21 @@ def flights(destination, origination, departureDate):
             cheapest_flight = flights.data[0]
         else:
             return None
-        airline_code = cheapest_flight['itineraries'][0]['segments'][0]['carrierCode']
-        airline = amadeus.reference_data.airlines.get(airlineCodes=airline_code).data[0]['businessName']
-        class_code = cheapest_flight['travelerPricings'][0]['fareDetailsBySegment'][0]['class'] 
+        airline_names, class_names = get_airlines(cheapest_flight)
+        connecting_flights = len(cheapest_flight['itineraries'][0]['segments']) - 1
 
-        for cl in seat_classes:
-            for code in seat_classes[cl]:
-                if class_code == code:
-                    class_name = cl
-                else:
-                    class_name = "economy"
-
-        duration = cheapest_flight['itineraries'][0]['segments'][0]['duration']
+        duration = cheapest_flight['itineraries'][0]['duration']
         duration_shortened = duration[2:]
         flight_data = {
-            'airline' : airline,
-            'num_stops' : cheapest_flight['itineraries'][0]['segments'][0]['numberOfStops'],
+            'airline' : airline_names,
+            'num_stops' : connecting_flights,
             'price' : cheapest_flight['price']['total'],
             'duration' : duration_shortened,
-            'seat_class' : class_name
+            'seat_class' : class_names
         }
+        # with open ('flight.json', 'w') as outfile:
+        #     json.dump(cheapest_flight, outfile)
+
         return flight_data
     except ResponseError as error:
         raise error
@@ -158,6 +147,20 @@ def get_airport_codes(country):
     all_airports.sort()
     airports.sort()
     return all_airports, airports
+
+def get_airlines(flight_data):
+    all_codes = []
+    for flight in flight_data['itineraries'][0]['segments']:
+        all_codes.append(flight['carrierCode'])
+    airline_names = ''
+    for code in all_codes:
+        airline = amadeus.reference_data.airlines.get(airlineCodes=code).data[0]['businessName']
+        airline_names += airline + "<br>"
+    class_names = ''
+    for flight in flight_data['travelerPricings'][0]['fareDetailsBySegment']:
+        class_names += flight['cabin'] + "<br>"
+    return airline_names[0:-2], class_names[0:-2]
+
 
 
 if __name__ == '__main__':

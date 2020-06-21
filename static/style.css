@@ -11,3 +11,18 @@
     color: #48758e;
     border: solid #48758e 1px;
 }
+
+.restrictions {
+    /* border-top: solid rgb(221,224,227, 0.6) 10px; */
+    border-bottom: solid rgb(221,224,227, 0.6) 10px;
+
+}
+html, body {
+    height: 100%;
+}
+
+.fill {
+    min-height: 100%;
+    height: 100%;
+
+}

@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="jumbotron">
+    <div class="jumbotron fill">
         <div class="row">
             <div class="col-8">
                 <h1 class="display-4">TravelAid</h1>
@@ -18,8 +18,9 @@
                 </form>
             
                 <br>
-                <div style="overflow: auto; width: auto; height:250px;">
-                    {% if data_obj %}
+                    {% if data_obj %}                
+                <div class="restrictions" style="overflow: auto; width: auto; height:250px;">
+
                         <h3 class="country">{{ data_obj.adm0_name }}</h3>
                         {% if data_obj.info %}
                             {%  set info = data_obj.info.replace("\n", "<br>")%}
@@ -31,10 +32,11 @@
                           {%  set optional = data_obj.optional2.replace("\n", "<br>")%}
                             <p id="country_optional">{{ optional | safe }}</p>
                         {% endif %}
-                    {% endif %}
-                    <div id="output"></div>
-                </div>
 
+
+                </div>
+                    {% endif %}
+                    <div id="output"></div>                    
             </div>
             <div class="col-4">
                 <p> <img src="/static/cartoon-globe.png" alt="cartoon-globe"></p>
@@ -85,15 +87,15 @@
                   width="100%">
                     <thead>
                       <tr>
-                        <th class="th-sm">Airline
+                        <th class="th-sm col-xs-4">Airline Itinerary
                         </th>
-                        <th class="th-sm">Number of Stops
+                        <th class="th-sm col-xs-2">Connections
                         </th>
-                        <th class="th-sm">Price
+                        <th class="th-sm col-xs-2">Price (Total)
                         </th>
-                        <th class="th-sm">Duration
+                        <th class="th-sm col-xs-2">Duration (Total)
                         </th>
-                        <th class="th-sm">Class
+                        <th class="th-sm col-xs-2">Class
                         </th>
                       </tr>
                     </thead>
@@ -102,13 +104,13 @@
                       <tr>
 
                         {% if flight_data %}
-                            <td>{{ flight_data.airline }}</td>
+                            <td>{{ flight_data.airline | safe }}</td>
                             <td>{{ flight_data.num_stops }}</td>
                             <td>${{ flight_data.price }} </td>
                             <td>{{ flight_data.duration }}</td>
-                            <td>{{ flight_data.seat_class }}</td>
+                            <td>{{ flight_data.seat_class | safe }}</td>
                         {% else %}
-                            <td>There are no flights meeting that criteria.</td>
+                            <td colspan="5">There are no flights meeting that criteria.</td>
                         {% endif %}            
                     
                       </tr>
