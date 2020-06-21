@@ -3,6 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from amadeus import Client, ResponseError
 # from amadeusapi import *
 import csv, json, requests
+from datetime import datetime
 
 
 with open('static/restrictions_data.json', 'r') as infile:
@@ -91,7 +92,8 @@ def home():
                 counter += 1
             all_airport_codes, country_airport_codes = get_airport_codes(country_name)
             # Return page with error statement if departure date not entered
-            if not departureDate:
+            date_time_obj = datetime.strptime(departureDate,'%Y-%m-%d')
+            if not departureDate or (date_time_obj.date() < datetime.date(datetime.now())):
                 return render_template('home.html', country_submit=True, flight_submit=True,
                                     invalid_date=True, 
                                     data_obj=data_obj, country_list=country_list,
