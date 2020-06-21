@@ -66,9 +66,9 @@
                                 </select>
                                 <label>Select Destination Airport for <strong class="country">{{ data_obj.adm0_name }} </strong> </label>
                         </div>
-                             <input class="form-control" id="departure_date" type="date" name="departure">
+                             <input class="form-control" id="departure_date" type="date" name="departure" placeholder="YYYY-MM-DD">
                              <label>Enter Departure Date</label>
-                        <input class="btn btn-light" type="submit" name="submit_button" value="Get Flights">
+                        <input class="btn btn-light" id="get_flights" type="submit" name="submit_button" value="Get Flights">
                     </form>
                 {% else %}
                         <p>No airport information found for that country</p>                
