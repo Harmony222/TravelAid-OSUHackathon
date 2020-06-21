@@ -11,7 +11,7 @@
                 <option value = "{{ country }}">{{ country}}</option>
                 {% endfor %}
              </select>
-             <input type="submit" value="Submit">
+             <input type="submit" name="submit_button" value="country_submit" >
     </form>
 
     <br>
@@ -19,16 +19,18 @@
         {% if data_obj %}
             <h3>{{ data_obj.adm0_name }}</h3>
             {% if data_obj.info %}
-                <p>{{ data_obj.info }}</p>
+                <p id="country_info">{{ data_obj.info }}</p>
+                
             {% else %}
                 <p>No information available.</p>
             {% endif %}
         {% endif %}
+        <div id="output"></div>
     </div>
     <br>
 <div>
 {% if country_airport_codes %}
-    <form action="/results" method="POST">
+    <form action="/home" method="POST">
         <label>Select Origination Airport</label>
             <select name = "origination" class="chosen-airport" >
               {% for airport in all_airport_codes %}
@@ -42,8 +44,8 @@
                 {% endfor %}
              </select>
         <label>Enter Departure Date</label>
-             <input type="date">
-        <input type="submit" value="Submit">
+             <input type="date" name="departure">
+        <input type="submit" name="submit_button" value="code_submit">
     </form>
 {% endif %}  
 {% if no_airport_found %}
@@ -64,31 +66,23 @@
         </th>
         <th class="th-sm">Duration
         </th>
-        <th class="th-sm">Class
-        </th>
+        <!-- <th class="th-sm">Class
+        </th> -->
       </tr>
     </thead>
 
-    <!-- <tbody>
-    <tr>
-    </tr>
-  </tbody> -->
-
-    <tfoot>
+    <tbody>
       <tr>
-        <th class="th-sm">Airline
-        </th>
-        <th class="th-sm">Number of Stops
-        </th>
-        <th class="th-sm">Price
-        </th>
-        <th class="th-sm">Duration
-        </th>
-        <th class="th-sm">Class
-        </th>
+      {% if flight_data %}
+          <td>{{ flight_data.airline }}</td>
+          <td>{{ flight_data.num_stops }}</td>
+          <td>{{ flight_data.price }} </td>
+          <td>{{ flight_data.duration }}</td>
+          <!-- <td>{{ flight_data.seat_class }}</td> -->
+      {% endif %}            
       </tr>
-    </tfoot>
-  </table>
+  </tbody>
+</table>
 
 </div>
 

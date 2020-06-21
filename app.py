@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request
 from apscheduler.schedulers.background import BackgroundScheduler
 from amadeus import Client, ResponseError
-from amadeusapi import *
+# from amadeusapi import *
 import csv, json, requests
 
 
@@ -36,10 +36,10 @@ scheduler.start()
 app = Flask(__name__)
 
 # https://github.com/amadeus4dev/amadeus-python
-# amadeus = Client(
-#     client_id='id',
-#     client_secret='secret'
-# )
+amadeus = Client(
+    client_id='u5zmdzdBHAKZt13AbvSmfsDFO6kfC68A',
+    client_secret='PkfVAE5FMJc2G9Gv'
+)
 
 @app.route('/')
 @app.route('/home', methods=['POST', 'GET'])
@@ -51,31 +51,37 @@ def home():
                 country_list.append(country["adm0_name"])
                 counter += 1
         country_list.sort()
-        # print(country_list)
     if request.method == 'POST':
-        country_name = request.form['country']
-        # country_name = request.form.get('country1')
-        print(country_name)
-        counter = 0
-        try:
-            for country in r_data:
-                if country_name == country["adm0_name"]:
-                    data_obj = r_data[counter]
-                counter += 1
-            print('testing try block')
-            all_airport_codes, country_airport_codes = get_airport_codes(country_name)
-            # if len(country_airport_codes) == 0:
-            #     no_airport_found = "No airport information found for that country."
-            return render_template('home.html', data_obj=data_obj, country_list=country_list, 
-                                    all_airport_codes=all_airport_codes, country_airport_codes=country_airport_codes)
-        except:
-            return 'There was an issue finding that country info'
+        if request.form['submit_button'] == 'country_submit':
+            country_name = request.form['country']
+            counter = 0
+            try:
+                for country in r_data:
+                    if country_name == country["adm0_name"]:
+                        data_obj = r_data[counter]
+                    counter += 1
+                print('testing try block')
+                all_airport_codes, country_airport_codes = get_airport_codes(country_name)
+                # if len(country_airport_codes) == 0:
+                #     no_airport_found = "No airport information found for that country."
+                return render_template('home.html', data_obj=data_obj, country_list=country_list, 
+                                        all_airport_codes=all_airport_codes, country_airport_codes=country_airport_codes)
+            except:
+                return 'There was an issue finding that country info'
+        elif request.form['submit_button'] == 'code_submit':
+            destination = request.form['destination']
+            origination = request.form['origination']
+            departureDate = request.form['departure']
+            print(departureDate)
+            print(destination)
+            flight_data = flights(destination, origination, departureDate)
+            print(flight_data)
+            return render_template('home.html', flight_data=flight_data, country_list=country_list)
     else:
         return render_template('home.html', country_list=country_list)
 
 
-@app.route('/testing', methods=['POST', 'GET'])
-def testing():
+def flights(destination, origination, departureDate):
     seat_classes = {
         'economy' : ['K', 'L', 'Q', 'V', 'W', 'U', 'T', 'X', 'N', 'O', 'S', 'Y', 'B', 'M', 'H', 'W', 'E'],
         'business' : ['D', 'I', 'Z', 'J', 'C', 'D'],
@@ -84,9 +90,9 @@ def testing():
 
     try:
         flights = amadeus.shopping.flight_offers_search.get(
-            originLocationCode='SEA', 
-            destinationLocationCode='LHR',
-            departureDate='2020-07-01', 
+            originLocationCode=origination, 
+            destinationLocationCode=destination,
+            departureDate=departureDate,
             adults=1,
             currencyCode="USD")
         cheapest_flight = flights.data[0]
@@ -104,10 +110,10 @@ def testing():
             'airline' : airline,
             'num_stops' : cheapest_flight['itineraries'][0]['segments'][0]['numberOfStops'],
             'price' : cheapest_flight['price']['total'],
-            'duration' : cheapest_flight['itineraries'][0]['segments'][0]['duration'],
-            'seat_class' : class_name
+            'duration' : cheapest_flight['itineraries'][0]['segments'][0]['duration']
+            #'seat_class' : class_name
         }
-        return render_template('testing.html', flight_data=flight_data) 
+        return flight_data
         # print(flight_data)
         #cheapest_flight['validatingAirlineCodes'i un-comment the code below to write the data to a json file for easier viewing!
         # with open ('flight.json', 'w') as outfile:
