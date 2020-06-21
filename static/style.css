@@ -40,3 +40,7 @@ html, body {
     min-width: 160px;
     padding: .3rem .45rem;
 }
+.outer-div {
+    min-height: 950px;
+    height: 100%;
+}
