@@ -8,7 +8,6 @@
             
                 <form action="/home" method="POST">
                     <label>Select a country</label>
-                        <!-- <input type="text" name="country" id="country"> -->
                          <select name = "country" class="chosen-select" >
                            <option value = "select">Select</option>
                             {% for country in country_list %}
@@ -23,10 +22,14 @@
                     {% if data_obj %}
                         <h3 class="country">{{ data_obj.adm0_name }}</h3>
                         {% if data_obj.info %}
-                            <p id="country_info">{{ data_obj.info }}</p>
-                            
+                            {%  set info = data_obj.info.replace("\n", "<br>")%}
+                              <p>{{ info | safe }}</p>
                         {% else %}
                             <p>No information available.</p>
+                        {% endif %}
+                        {% if data_obj.optional2 %}
+                          {%  set optional = data_obj.optional2.replace("\n", "<br>")%}
+                            <p id="country_optional">{{ optional | safe }}</p>
                         {% endif %}
                     {% endif %}
                     <div id="output"></div>

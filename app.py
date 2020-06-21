@@ -59,6 +59,11 @@ def home():
                 for country in r_data:
                     if country_name == country["adm0_name"]:
                         data_obj = r_data[counter]
+                        # data_obj = {
+                        #     'name': data['adm0_name'],
+                        #     'info': data['info'],
+                        #     'optional2': data['optional2']
+                        # }
                     counter += 1
                 all_airport_codes, country_airport_codes = get_airport_codes(country_name)
                 return render_template('home.html', country_submit=True, flight_submit=False, 
@@ -88,7 +93,6 @@ def home():
                                     all_airport_codes=all_airport_codes, 
                                     country_airport_codes=country_airport_codes, country_name=country_name)
             flight_data = flights(destination, origination, departureDate)
-            #print(flight_data)
             return render_template('home.html', country_submit=True, flight_submit=True, 
                                                 data_obj=data_obj, country_list=country_list,
                                                 all_airport_codes=all_airport_codes, 
@@ -98,6 +102,7 @@ def home():
         return render_template('home.html', country_submit=False, flight_submit=False, 
                                             country_list=country_list)
 
+    
 
 def flights(destination, origination, departureDate):
     seat_classes = {
@@ -128,11 +133,13 @@ def flights(destination, origination, departureDate):
                 else:
                     class_name = "economy"
 
+        duration = cheapest_flight['itineraries'][0]['segments'][0]['duration']
+        duration_shortened = duration[2:]
         flight_data = {
             'airline' : airline,
             'num_stops' : cheapest_flight['itineraries'][0]['segments'][0]['numberOfStops'],
             'price' : cheapest_flight['price']['total'],
-            'duration' : cheapest_flight['itineraries'][0]['segments'][0]['duration'],
+            'duration' : duration_shortened,
             'seat_class' : class_name
         }
         return flight_data
