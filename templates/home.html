@@ -8,7 +8,7 @@
 
                 <form action="/home" method="POST">
                     <label>Select a country</label>
-                         <select name = "country" class="chosen-select" >
+                         <select name = "country" class="form-control chosen-select" >
                            <option value = "select">Select</option>
                             {% for country in country_list %}
                             <option value = "{{ country }}">{{ country}}</option>
