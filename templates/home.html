@@ -15,13 +15,13 @@
                             <option value = "{{ country }}">{{ country}}</option>
                             {% endfor %}
                          </select>
-                         <input type="submit" name="submit_button" value="country_submit" >
+                         <input class="btn btn-light" type="submit" name="submit_button" value="Get Country Restrictions" >
                 </form>
             
                 <br>
                 <div style="overflow: auto; width: auto; height:250px;">
                     {% if data_obj %}
-                        <h3>{{ data_obj.adm0_name }}</h3>
+                        <h3 class="country">{{ data_obj.adm0_name }}</h3>
                         {% if data_obj.info %}
                             <p id="country_info">{{ data_obj.info }}</p>
                             
@@ -39,32 +39,43 @@
             
             <br>
 
-            <div>
+            <div class="container" id="airportForm">
+              {% if country_submit %}                
                 {% if country_airport_codes %}
                     <form action="/home" method="POST">
-                        <label>Select Origination Airport</label>
-                            <select name = "origination" class="chosen-airport" >
-                              {% for airport in all_airport_codes %}
-                              <option value = "{{ airport }}">{{ airport }}</option>
-                              {% endfor %}
-                            </select>       
-                        <label>Select Destination Airport for <strong>{{ data_obj.adm0_name }} </strong> </label>
-                             <select name = "destination" class="chosen-airport" >
-                                {% for airport in country_airport_codes %}
+                        <input type="text" hidden name="country" value="{{ country_name }}">
+                        <div>
+                                <select name = "origination" class="chosen-airport" >
+                                {% for airport in all_airport_codes %}
                                 <option value = "{{ airport }}">{{ airport }}</option>
                                 {% endfor %}
-                             </select>
-                        <label>Enter Departure Date</label>
+                                </select>                                 
+                                <label>Select Origination Airport</label>
+                        </div>
+                        <div>
+                                <select name = "destination" class="chosen-airport" >
+                                    {% for airport in country_airport_codes %}
+                                    <option value = "{{ airport }}">{{ airport }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label>Select Destination Airport for <strong class="country">{{ data_obj.adm0_name }} </strong> </label>
+                        </div>
                              <input type="date" name="departure">
-                        <input type="submit" name="submit_button" value="code_submit">
+                             <label>Enter Departure Date</label>
+                        <input class="btn btn-light" type="submit" name="submit_button" value="Get Flights">
                     </form>
+                {% else %}
+                        <p>No airport information found for that country</p>                
                 {% endif %}  
-                {% if no_airport_found %}
-                    <p>{{ no_airport_found }}</p>
-                {% endif %}
-                </div>
+              {% endif %}
+            </div>
                 
                 <br>
+            <div class="container">
+            {% if flight_submit %}
+                {% if invalid_date %}
+                    <p>Please enter a valid date.</p>                    
+                {% else %}
 
                 <div>
                   <table id="dtDynamicVerticalScrollExample" class="table table-striped table-bordered table-sm" cellspacing="0"
@@ -79,26 +90,32 @@
                         </th>
                         <th class="th-sm">Duration
                         </th>
-                        <!-- <th class="th-sm">Class
-                        </th> -->
+                        <th class="th-sm">Class
+                        </th>
                       </tr>
                     </thead>
                 
                     <tbody>
                       <tr>
-                      {% if flight_data %}
-                          <td>{{ flight_data.airline }}</td>
-                          <td>{{ flight_data.num_stops }}</td>
-                          <td>{{ flight_data.price }} </td>
-                          <td>{{ flight_data.duration }}</td>
-                          <!-- <td>{{ flight_data.seat_class }}</td> -->
-                      {% endif %}            
+
+                        {% if flight_data %}
+                            <td>{{ flight_data.airline }}</td>
+                            <td>{{ flight_data.num_stops }}</td>
+                            <td>${{ flight_data.price }} </td>
+                            <td>{{ flight_data.duration }}</td>
+                            <td>{{ flight_data.seat_class }}</td>
+                        {% else %}
+                            <td>There are no flights meeting that criteria.</td>
+                        {% endif %}            
+                    
                       </tr>
                   </tbody>
                 </table>
                 
                 </div>
-        
+            {% endif %}
+            {% endif %}   
+        </div>
         </div>
     </div>
 {% endblock content %}

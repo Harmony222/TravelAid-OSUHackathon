@@ -1,0 +1,13 @@
+#airportForm {
+    margin-top: 30px;
+}
+
+.country {
+    color: #6691ac;
+}
+
+.btn-light {
+    font-weight: bold;
+    color: #48758e;
+    border: solid #48758e 1px;
+}

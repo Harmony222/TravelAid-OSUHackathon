@@ -52,7 +52,7 @@ def home():
                 counter += 1
         country_list.sort()
     if request.method == 'POST':
-        if request.form['submit_button'] == 'country_submit':
+        if request.form['submit_button'] == "Get Country Restrictions":
             country_name = request.form['country']
             counter = 0
             try:
@@ -60,25 +60,43 @@ def home():
                     if country_name == country["adm0_name"]:
                         data_obj = r_data[counter]
                     counter += 1
-                print('testing try block')
                 all_airport_codes, country_airport_codes = get_airport_codes(country_name)
-                # if len(country_airport_codes) == 0:
-                #     no_airport_found = "No airport information found for that country."
-                return render_template('home.html', data_obj=data_obj, country_list=country_list, 
-                                        all_airport_codes=all_airport_codes, country_airport_codes=country_airport_codes)
+                return render_template('home.html', country_submit=True, flight_submit=False, 
+                                                    data_obj=data_obj, country_list=country_list, 
+                                                    all_airport_codes=all_airport_codes, 
+                                                    country_airport_codes=country_airport_codes,
+                                                    country_name=country_name)
             except:
                 return 'There was an issue finding that country info'
-        elif request.form['submit_button'] == 'code_submit':
+        elif request.form['submit_button'] == "Get Flights":
+            country_name = request.form['country']
             destination = request.form['destination']
             origination = request.form['origination']
             departureDate = request.form['departure']
-            print(departureDate)
-            print(destination)
+            counter = 0
+            data_obj = None
+            for country in r_data:
+                if country_name == country["adm0_name"]:
+                    data_obj = r_data[counter]
+                counter += 1
+            all_airport_codes, country_airport_codes = get_airport_codes(country_name)
+            # Return page with error statement if departure date not entered
+            if not departureDate:
+                return render_template('home.html', country_submit=True, flight_submit=True,
+                                    invalid_date=True, 
+                                    data_obj=data_obj, country_list=country_list,
+                                    all_airport_codes=all_airport_codes, 
+                                    country_airport_codes=country_airport_codes, country_name=country_name)
             flight_data = flights(destination, origination, departureDate)
-            print(flight_data)
-            return render_template('home.html', flight_data=flight_data, country_list=country_list)
+            #print(flight_data)
+            return render_template('home.html', country_submit=True, flight_submit=True, 
+                                                data_obj=data_obj, country_list=country_list,
+                                                all_airport_codes=all_airport_codes, 
+                                                country_airport_codes=country_airport_codes,
+                                                flight_data=flight_data)
     else:
-        return render_template('home.html', country_list=country_list)
+        return render_template('home.html', country_submit=False, flight_submit=False, 
+                                            country_list=country_list)
 
 
 def flights(destination, origination, departureDate):
@@ -95,9 +113,11 @@ def flights(destination, origination, departureDate):
             departureDate=departureDate,
             adults=1,
             currencyCode="USD")
-        cheapest_flight = flights.data[0]
-
-        airline_code = cheapest_flight['itineraries'][0]['segments'][0]['operating']['carrierCode']
+        if len(flights.data) > 0: 
+            cheapest_flight = flights.data[0]
+        else:
+            return None
+        airline_code = cheapest_flight['itineraries'][0]['segments'][0]['carrierCode']
         airline = amadeus.reference_data.airlines.get(airlineCodes=airline_code).data[0]['businessName']
         class_code = cheapest_flight['travelerPricings'][0]['fareDetailsBySegment'][0]['class'] 
 
@@ -105,19 +125,17 @@ def flights(destination, origination, departureDate):
             for code in seat_classes[cl]:
                 if class_code == code:
                     class_name = cl
+                else:
+                    class_name = "economy"
 
         flight_data = {
             'airline' : airline,
             'num_stops' : cheapest_flight['itineraries'][0]['segments'][0]['numberOfStops'],
             'price' : cheapest_flight['price']['total'],
-            'duration' : cheapest_flight['itineraries'][0]['segments'][0]['duration']
-            #'seat_class' : class_name
+            'duration' : cheapest_flight['itineraries'][0]['segments'][0]['duration'],
+            'seat_class' : class_name
         }
         return flight_data
-        # print(flight_data)
-        #cheapest_flight['validatingAirlineCodes'i un-comment the code below to write the data to a json file for easier viewing!
-        # with open ('flight.json', 'w') as outfile:
-        #     json.dump(cheapest_flight, outfile)
     except ResponseError as error:
         raise error
 
