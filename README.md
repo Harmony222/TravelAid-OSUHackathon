@@ -5,8 +5,6 @@ Try it out!
 
 Team: Git Em
 
-With COVID-19 restricting travel in many countries, it’s difficult to decide if or where to travel this summer. Most countries are slowly opening their borders with different rules about travel.
-
 TravelAid is a web app where you can find all the most recent travel information and restrictions for each country in one place as well as the cheapest flight and pricing from your location to the country of your choice.
 
 TravelAid gathers data daily that is provided in a CSV file from The Humanitarian Data Exchange (data.humdata.org). Users can select a country from a drop down menu and our client-side sends a request to our server-side app for the country's travel restrictions and COVID-19 rules in place. After that the user can choose to search flights by selecting any airport code from and origin dropdown and the destination dropdown is limited to the airport codes in the country that they have selected. Another request is sent to our server-side which sends a request to the flights API we used called Amadeus. We then query a file with all the airports to obtain the airport codes for each country. In order to get the airline name from the airline code, we send a request to another Amadeus API as well. The user can then view the cheapest flight from the origin to the destination of their choice.
