@@ -5,14 +5,9 @@ from amadeus import Client, ResponseError
 import csv, json, requests
 from datetime import datetime
 
-
-with open('static/restrictions_data.json', 'r') as infile:
-    r_data = json.load(infile)
-
+app = Flask(__name__)
 
 # travel restriction by country data is updated daily from this website: https://data.humdata.org/dataset/covid-19-global-travel-restrictions-and-airline-information
-# pip3 install apscheduler to call updateJSON function everyday
-# pip3 install requests to get csv file
 # csv file is converted to JSON format
 # https://stackoverflow.com/a/46738061
 def updateJSON():
@@ -20,21 +15,17 @@ def updateJSON():
     req = requests.get(url)
     with open("static/data.csv",'wb') as f: 
         f.write(req.content) 
-
+        
     with open('static/data.csv', 'rt') as csvdata:
         next(csvdata, None)
         reader = csv.DictReader(csvdata,fieldnames=['adm0_name','iso3','X','Y','published','sources','info','optional1','optional2','optional3','ObjectId'])
         json.dump([row for row in reader], open('static/restrictions_data.json', 'w+'))
-    print("Successfully executed this function!")
-
+        print("Successfully executed this function!")
 
 scheduler = BackgroundScheduler(daemon=True)
-#scheduler.add_job(updateJSON,'interval',minutes=2)
-# there's prob a better way to do this than min
-scheduler.add_job(updateJSON,'interval',minutes=1440)
+scheduler.add_job(updateJSON,'interval',minutes=1)
 scheduler.start()
 
-app = Flask(__name__)
 
 # https://github.com/amadeus4dev/amadeus-python
 amadeus = Client(
@@ -45,6 +36,9 @@ amadeus = Client(
 @app.route('/')
 @app.route('/home', methods=['POST', 'GET'])
 def home():
+    with open('static/restrictions_data.json', 'r') as infile:
+            r_data = json.load(infile)
+
     if request.method == 'POST' or request.method == 'GET':
         country_list = []
         counter = 0
@@ -60,11 +54,6 @@ def home():
                 for country in r_data:
                     if country_name == country["adm0_name"]:
                         data_obj = r_data[counter]
-                        # data_obj = {
-                        #     'name': data['adm0_name'],
-                        #     'info': data['info'],
-                        #     'optional2': data['optional2']
-                        # }
                     counter += 1
                 all_airport_codes, country_airport_codes = get_airport_codes(country_name)
                 return render_template('home.html', country_submit=True, flight_submit=False, 
@@ -128,6 +117,10 @@ def flights(destination, origination, departureDate):
 
         duration = cheapest_flight['itineraries'][0]['duration']
         duration_shortened = duration[2:]
+
+        # working on getting multiple legs of flight
+        # print(cheapest_flight['itineraries'][0]['segments'])
+
         flight_data = {
             'airline' : airline_names,
             'num_stops' : connecting_flights,
@@ -135,9 +128,7 @@ def flights(destination, origination, departureDate):
             'duration' : duration_shortened,
             'seat_class' : class_names
         }
-        # with open ('flight.json', 'w') as outfile:
-        #     json.dump(cheapest_flight, outfile)
-
+        print(flight_data)
         return flight_data
     except ResponseError as error:
         raise error
