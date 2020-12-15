@@ -90,15 +90,11 @@
                   width="100%">
                     <thead>
                       <tr>
-                        <th class="th-sm col-xs-4">Airline Itinerary
-                        </th>
                         <th class="th-sm col-xs-2">Connections
                         </th>
                         <th class="th-sm col-xs-2">Price (Total)
                         </th>
                         <th class="th-sm col-xs-2">Duration (Total)
-                        </th>
-                        <th class="th-sm col-xs-2">Class
                         </th>
                       </tr>
                     </thead>
@@ -107,16 +103,68 @@
                       <tr>
 
                         {% if flight_data %}
-                            <td>{{ flight_data.airline | safe }}</td>
                             <td>{{ flight_data.num_stops }}</td>
                             <td>${{ flight_data.price }} </td>
                             <td>{{ flight_data.duration }}</td>
-                            <td>{{ flight_data.seat_class | safe }}</td>
                         {% else %}
                             <td colspan="5">There are no flights meeting that criteria.</td>
                         {% endif %}            
                     
                       </tr>
+                  </tbody>
+                </table>
+                <!-- {% for leg in testData %}
+                <p>{{ leg.departure.iataCode }}</p>
+                {% endfor %} -->
+
+                <table class="table table-striped table-bordered table-sm" cellspacing="0"
+                  width="100%">
+                    <thead>
+                      <tr>
+                        <th class="th-sm col-xs-4">Airline
+                        </th>
+                        <th class="th-sm col-xs-2">Departure Airport
+                        </th>
+                        <th class="th-sm col-xs-2">Departure Date
+                        </th>
+                        <th class="th-sm col-xs-2">Departure Time
+                        </th>
+                        <th class="th-sm col-xs-2">Arrival Airport
+                        </th>
+                        <th class="th-sm col-xs-2">Arrival Date
+                        </th>
+                        <th class="th-sm col-xs-2">Arrival Time
+                        </th>
+                        <th class="th-sm col-xs-2">Duration
+                        </th>
+                        <th class="th-sm col-xs-2">Class
+                        </th>
+                      </tr>
+                    </thead>
+                
+                    <tbody>
+                     
+
+                        {% if flight_data %}
+                          {% for leg in flight_data.data %}
+                          <tr>
+                            <td>{{ leg.airName}}</td>
+                            <td>{{ leg.departure.iataCode }}</td>
+                            <td>{{ leg.departure.at[0:10] }}</td>
+                            <td>{{ leg.departure.at[11:16] }}</td>
+                            <td>{{ leg.arrival.iataCode }}</td>
+                            <td>{{ leg.arrival.at[0:10] }}</td>
+                            <td>{{ leg.arrival.at[11:16] }}</td>
+                            <td>{{ leg.duration[2:] }}</td>
+                            <td>{{ leg.airClass}}</td>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                            <td colspan="5">There are no flights meeting that criteria.</td>
+                                  
+                    
+                      </tr>
+                      {% endif %}
                   </tbody>
                 </table>
                 

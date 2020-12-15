@@ -23,7 +23,7 @@ def updateJSON():
         print("Successfully executed this function!")
 
 scheduler = BackgroundScheduler(daemon=True)
-scheduler.add_job(updateJSON,'interval',minutes=1)
+scheduler.add_job(updateJSON,'interval',minutes=1440)
 scheduler.start()
 
 
@@ -115,20 +115,20 @@ def flights(destination, origination, departureDate):
         airline_names, class_names = get_airlines(cheapest_flight)
         connecting_flights = len(cheapest_flight['itineraries'][0]['segments']) - 1
 
-        duration = cheapest_flight['itineraries'][0]['duration']
-        duration_shortened = duration[2:]
+        duration = cheapest_flight['itineraries'][0]['duration'][2:]
+        # duration_shortened = duration[2:]
 
-        # working on getting multiple legs of flight
-        # print(cheapest_flight['itineraries'][0]['segments'])
+        data = cheapest_flight['itineraries'][0]['segments']
+        for i in range(len(data)):
+            data[i]['airClass'] = class_names[i]
+            data[i]['airName'] = airline_names[i]
 
         flight_data = {
-            'airline' : airline_names,
             'num_stops' : connecting_flights,
             'price' : cheapest_flight['price']['total'],
-            'duration' : duration_shortened,
-            'seat_class' : class_names
+            'duration' : duration,
+            'data' : data
         }
-        print(flight_data)
         return flight_data
     except ResponseError as error:
         raise error
@@ -150,14 +150,14 @@ def get_airlines(flight_data):
     all_codes = []
     for flight in flight_data['itineraries'][0]['segments']:
         all_codes.append(flight['carrierCode'])
-    airline_names = ''
+    airline_names = []
     for code in all_codes:
         airline = amadeus.reference_data.airlines.get(airlineCodes=code).data[0]['businessName']
-        airline_names += airline + "<br>"
-    class_names = ''
+        airline_names.append(airline)
+    class_names = []
     for flight in flight_data['travelerPricings'][0]['fareDetailsBySegment']:
-        class_names += flight['cabin'] + "<br>"
-    return airline_names[0:-2], class_names[0:-2]
+        class_names.append(flight['cabin'])
+    return airline_names, class_names
 
 
 
