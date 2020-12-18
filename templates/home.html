@@ -4,34 +4,36 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-8">
                 <h1 class="display-4">TravelAid</h1>
-                <p class="lead">TravelAid is a web app where you can find all the travel information/restrictions for each country in one place as well as flight options and pricing from your location to the country of your choice.</p>
+                <p class="lead">TravelAid is a web app where you can find all the travel information/restrictions 
+                  for each country in one place as well as flight options and pricing from your location to the 
+                  country of your choice.</p>
 
                 <form action="/home" method="POST">
+                  <!-- dropdown to select a country -->
                     <label>Select a country</label>
                          <select name = "country" class="form-control chosen-select" >
                            <option value = "select">Select</option>
-                            {% for country in country_list %}
+                            {% for country in results.country_list %}
                             <option value = "{{ country }}">{{ country}}</option>
                             {% endfor %}
                          </select>
                          <input class="btn btn-light" type="submit" name="submit_button" value="Get Country Restrictions" >
                 </form>
 
-
-            
                 <br>
-                    {% if data_obj %}                
+                <!-- show restrictions if there is restriction data for the selected country -->
+                    {% if results.data_obj %}                
                 <div class="restrictions" style="overflow:auto; width:auto; height:250px;">
 
-                        <h3 class="country">{{ data_obj.adm0_name }}</h3>
-                        {% if data_obj.info %}
-                            {%  set info = data_obj.info.replace("\n", "<br>")%}
+                        <h3 class="country">{{ results.data_obj.adm0_name }}</h3>
+                        {% if results.data_obj.info %}
+                            {%  set info = results.data_obj.info.replace("\n", "<br>")%}
                               <p>{{ info | safe }}</p>
                         {% else %}
                             <p>No information available.</p>
                         {% endif %}
-                        {% if data_obj.optional2 %}
-                          {%  set optional = data_obj.optional2.replace("\n", "<br>")%}
+                        {% if results.data_obj.optional2 %}
+                          {%  set optional = results.data_obj.optional2.replace("\n", "<br>")%}
                             <p id="country_optional">{{ optional | safe }}</p>
                         {% endif %}
 
@@ -45,32 +47,38 @@
             
             <br>
 
+            <!-- display flight search form  -->
             <div class="container" id="airportForm">
-              {% if country_submit %}                
-                {% if country_airport_codes %}
+              <!-- show flight search form if country has already been selected -->
+              {% if results.country_submit %}         
+              
+                <!-- show dropdown of possible arrival airports if available -->
+                {% if results.country_airport_codes %}
                     <form action="/home" method="POST">
-                        <input type="text" hidden name="country" value="{{ country_name }}">
+                        <input type="text" hidden name="country" value="{{ results.country_name }}">
                         <div>
-                                <select name = "origination" class="chosen-airport" >
-                                {% for airport in all_airport_codes %}
+                          <select name = "origination" class="chosen-airport" >
+                            {% for airport in results.all_airport_codes %}
+                              <option value = "{{ airport }}">{{ airport }}</option>
+                            {% endfor %}
+                          </select>                                 
+                          <label>Select Origination Airport</label>
+                        </div>
+                        <div>
+                          <select name = "destination" class="chosen-airport" >
+                              {% for airport in results.country_airport_codes %}
                                 <option value = "{{ airport }}">{{ airport }}</option>
-                                {% endfor %}
-                                </select>                                 
-                                <label>Select Origination Airport</label>
+                              {% endfor %}
+                          </select>
+                          <label>Select Destination Airport for <strong class="country">{{ results.data_obj.adm0_name }} </strong> </label>
                         </div>
-                        <div>
-                                <select name = "destination" class="chosen-airport" >
-                                    {% for airport in country_airport_codes %}
-                                    <option value = "{{ airport }}">{{ airport }}</option>
-                                    {% endfor %}
-                                </select>
-                                <label>Select Destination Airport for <strong class="country">{{ data_obj.adm0_name }} </strong> </label>
-                        </div>
-                             <input class="form-control" id="departure_date" type="date" name="departure" placeholder="YYYY-MM-DD">
-                             <label>Enter Departure Date</label>
+
+                        <input class="form-control" id="departure_date" type="date" name="departure" placeholder="YYYY-MM-DD">
+                        <label>Enter Departure Date</label>
                         <input class="btn btn-light" id="get_flights" type="submit" name="submit_button" value="Get Flights">
                     </form>
                 {% else %}
+                <!-- if no airports are found for that country -->
                         <p>No airport information found for that country</p>                
                 {% endif %}  
               {% endif %}
@@ -78,12 +86,16 @@
                 
                 <br>
             <div class="container">
-            {% if flight_submit %}
+            {% if results.flight_submit %}
+
+            <!-- catch invalid date -->
                 {% if invalid_date %}
                     <p>Please enter a valid date.</p>                    
                 {% else %}
-                <h5>Least expensive flight result for <span class="country"> {{ data_obj.adm0_name }}</span>  from {{ request_data.origination }}
-                    to {{ request_data.destination }} for {{ request_data.departureDate}}
+
+                <!-- if valid date, show cheapest flight summary -->
+                <h5>Least expensive flight result for <span class="country"> {{ results.data_obj.adm0_name }}</span>  from {{ results.request_data.origination }}
+                    to {{ results.request_data.destination }} for {{ results.request_data.departureDate}}
                 </h2>
                 <div>
                   <table class="table table-striped table-bordered table-sm" cellspacing="0"
@@ -101,52 +113,36 @@
                 
                     <tbody>
                       <tr>
-
-                        {% if flight_data %}
-                            <td>{{ flight_data.num_stops }}</td>
-                            <td>${{ flight_data.price }} </td>
-                            <td>{{ flight_data.duration }}</td>
+                        {% if results.flight_data %}
+                            <td>{{ results.flight_data.num_stops }}</td>
+                            <td>${{ results.flight_data.price }} </td>
+                            <td>{{ results.flight_data.duration }}</td>
                         {% else %}
                             <td colspan="5">There are no flights meeting that criteria.</td>
-                        {% endif %}            
-                    
+                        {% endif %}       
                       </tr>
                   </tbody>
                 </table>
-                <!-- {% for leg in testData %}
-                <p>{{ leg.departure.iataCode }}</p>
-                {% endfor %} -->
 
                 <table class="table table-striped table-bordered table-sm" cellspacing="0"
                   width="100%">
                     <thead>
                       <tr>
-                        <th class="th-sm col-xs-4">Airline
-                        </th>
-                        <th class="th-sm col-xs-2">Departure Airport
-                        </th>
-                        <th class="th-sm col-xs-2">Departure Date
-                        </th>
-                        <th class="th-sm col-xs-2">Departure Time
-                        </th>
-                        <th class="th-sm col-xs-2">Arrival Airport
-                        </th>
-                        <th class="th-sm col-xs-2">Arrival Date
-                        </th>
-                        <th class="th-sm col-xs-2">Arrival Time
-                        </th>
-                        <th class="th-sm col-xs-2">Duration
-                        </th>
-                        <th class="th-sm col-xs-2">Class
-                        </th>
+                        <th class="th-sm col-xs-4">Airline</th>
+                        <th class="th-sm col-xs-2">Departure Airport</th>
+                        <th class="th-sm col-xs-2">Departure Date</th>
+                        <th class="th-sm col-xs-2">Departure Time</th>
+                        <th class="th-sm col-xs-2">Arrival Airport</th>
+                        <th class="th-sm col-xs-2">Arrival Date</th>
+                        <th class="th-sm col-xs-2">Arrival Time</th>
+                        <th class="th-sm col-xs-2">Duration</th>
+                        <th class="th-sm col-xs-2">Class</th>
                       </tr>
                     </thead>
-                
                     <tbody>
-                     
-
-                        {% if flight_data %}
-                          {% for leg in flight_data.data %}
+                      <!-- show specific flight itinerary -->
+                        {% if results.flight_data %}
+                          {% for leg in results.flight_data.data %}
                           <tr>
                             <td>{{ leg.airName}}</td>
                             <td>{{ leg.departure.iataCode }}</td>
@@ -161,13 +157,10 @@
                         {% else %}
                             <tr>
                             <td colspan="5">There are no flights meeting that criteria.</td>
-                                  
-                    
                       </tr>
                       {% endif %}
                   </tbody>
                 </table>
-                
                 </div>
             {% endif %}
             {% endif %}   
