@@ -22,7 +22,7 @@ jsonpickle==1.4.1
 lazy-object-proxy==1.4.3
 MarkupSafe==1.1.1
 mccabe==0.6.1
-numpy==1.18.2
+numpy==1.22.0
 post==2019.4.13
 public==2019.4.13
 pylint==2.5.3
